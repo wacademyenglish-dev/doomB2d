@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>WOLFLIX Masterclass B2: DOOMSDAY</title>
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Jura:wght@400;500;600;700;900&family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        defcon: {
+                            bg: '#050a05',        
+                            panel: 'rgba(10, 15, 10, 0.8)', 
+                            green: '#2ecc71',     
+                            greenGlow: 'rgba(46, 204, 113, 0.4)',
+                            amber: '#f59e0b',     
+                            red: '#e74c3c',       
+                            text: '#f8fafc',
+                            muted: '#9ca3af'
+                        }
+                    },
+                    fontFamily: {
+                        base: ['Inter', 'sans-serif'],
+                        tech: ['Jura', 'sans-serif'],
+                        epic: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* ==================================================================
+           WOLFLIX ENGINE 4.5 - B2 25-PAGE ARCHITECTURE
+           ================================================================== */
+        
+        :root {
+            /* Normal Mode (Doom Green) */
+            --bg-top: #020502;
+            --bg-bot: #0a0f0a;
+            --panel-bg: rgba(10, 15, 10, 0.85);
+            --text-main: #f8fafc;
+            --text-muted: #9ca3af;
+            --accent: #2ecc71; 
+            --accent-glow: rgba(46, 204, 113, 0.5);
+            --border-color: #1f2922;
+            --btn-text: #000;
+        }
+
+        body.theme-emergency {
+            /* Incursion Mode (Reality Collapse Red) */
+            --bg-top: #0a0000;
+            --bg-bot: #1a0505;
+            --panel-bg: rgba(20, 5, 5, 0.9);
+            --text-main: #ffffff;
+            --text-muted: #fca5a5;
+            --accent: #e74c3c; 
+            --accent-glow: rgba(231, 76, 60, 0.6);
+            --border-color: #4a0f0f;
+            --btn-text: #ffffff;
+        }
+
+        body {
+            background-image: linear-gradient(180deg, var(--bg-top) 0%, var(--bg-bot) 100%);
+            background-color: var(--bg-bot);
+            color: var(--text-main);
+            font-family: var(--font-base);
+            transition: background 1.5s ease-in-out, --accent 1.5s ease;
+            overflow: hidden; margin: 0; min-height: 100vh;
+        }
+
+        /* --- STARRY BACKGROUND --- */
+        #stars-container {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; pointer-events: none; overflow: hidden;
+        }
+        .star {
+            position: absolute; background-color: var(--accent); border-radius: 50%;
+            animation: twinkle infinite alternate; opacity: 0.3; transition: background-color 1s;
+        }
+        @keyframes twinkle {
+            0% { opacity: 0.1; transform: scale(0.8); }
+            100% { opacity: 0.8; transform: scale(1.3); box-shadow: 0 0 10px var(--accent); }
+        }
+
+        /* --- LAYOUT --- */
+        .slide {
+            display: none; opacity: 0; width: 100%; min-height: 100%; flex-direction: column; padding: 1.5rem; position: relative; z-index: 10;
+        }
+        .slide.active { display: flex; animation: cinematicFade 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        .slide.active::before, .slide.active::after { content: ''; margin: auto; }
+        
+        .page-content {
+            margin: 0 auto; width: 100%; max-width: 1100px;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; flex-shrink: 0; padding: 2rem 0;
+        }
+
+        @keyframes cinematicFade {
+            from { opacity: 0; transform: scale(0.97) translateY(10px); filter: blur(4px); }
+            to { opacity: 1; transform: scale(1) translateY(0); filter: blur(0); }
+        }
+
+        /* --- PANELS --- */
+        .defcon-panel {
+            background-color: var(--panel-bg);
+            backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.9);
+            border-radius: 1rem; transition: all 0.4s ease;
+        }
+        
+        .speaking-starter {
+            background: rgba(0,0,0,0.6); border: 1px dashed var(--border-color);
+            border-left: 4px solid var(--accent); border-radius: 0.5rem;
+            padding: 1.25rem 1.5rem; margin-top: 1.5rem; text-align: left;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+        }
+        
+        .holo-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--accent); border-radius: 0.75rem;
+            cursor: pointer; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative; overflow: hidden;
+        }
+        .holo-card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 15px 30px rgba(0,0,0,0.8), 0 0 20px var(--accent-glow); }
+        .holo-content { max-height: 0; opacity: 0; overflow: hidden; transition: all 0.5s ease; }
+        .holo-card.open .holo-content { max-height: 600px; opacity: 1; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); }
+
+        h1, h2, h3, .font-tech { font-family: 'Jura', sans-serif; letter-spacing: 2px; }
+        .font-epic { font-family: 'Cinzel', serif; }
+
+        /* --- BUTTONS --- */
+        .defcon-btn {
+            background-color: var(--accent); color: var(--btn-text);
+            font-family: 'Jura', sans-serif; font-weight: 900; text-transform: uppercase; letter-spacing: 0.15em;
+            border-radius: 0.25rem; transition: all 0.2s;
+            box-shadow: 0 0 20px var(--accent-glow); border: 1px solid transparent; cursor: pointer;
+        }
+        .defcon-btn:hover { transform: translateY(-2px); box-shadow: 0 0 35px var(--accent-glow); filter: brightness(1.2); }
+        .btn-outline { background-color: transparent; border: 1px solid var(--border-color); color: var(--text-muted); transition: all 0.2s; border-radius: 0.25rem; font-family: 'Jura'; font-weight: bold; cursor: pointer;}
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background-color: var(--accent-glow); }
+
+        /* --- THE WOW FACTOR (GLASS SHATTER INCURSION) --- */
+        #shatter-layer {
+            position: fixed; inset: 0; z-index: 9999; display: none; pointer-events: none;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><path d="M50% 50% L20% 0 L80% 0 Z" fill="rgba(255,255,255,0.1)" stroke="white" stroke-width="2"/><path d="M50% 50% L0 30% L0 70% Z" fill="rgba(255,255,255,0.05)" stroke="white" stroke-width="2"/><path d="M50% 50% L100% 30% L100% 70% Z" fill="rgba(255,255,255,0.05)" stroke="white" stroke-width="2"/><path d="M50% 50% L20% 100% L80% 100% Z" fill="rgba(255,255,255,0.1)" stroke="white" stroke-width="2"/></svg>') no-repeat center center;
+            background-size: cover;
+        }
+        .shatter-active { display: block !important; animation: shatterAnim 2.5s forwards cubic-bezier(0.1, 0.8, 0.2, 1); }
+        @keyframes shatterAnim {
+            0% { opacity: 0; transform: scale(1.1); filter: invert(0); }
+            10% { opacity: 1; transform: scale(1); filter: invert(1) hue-rotate(90deg) brightness(2); }
+            30% { opacity: 1; transform: scale(1.05) skewX(5deg); filter: invert(0) brightness(1.5); }
+            50% { opacity: 1; filter: invert(1) drop-shadow(0 0 50px red); }
+            100% { opacity: 0; transform: scale(1.5); filter: invert(0); }
+        }
+
+        /* --- AUDIO DECRYPTION --- */
+        .cloze-slot {
+            display: inline-block; min-width: 120px; height: 35px;
+            border-bottom: 2px dashed var(--accent); background: rgba(0,0,0,0.5);
+            margin: 0 4px; vertical-align: bottom; transition: 0.3s;
+            text-align: center; font-family: 'Jura'; font-weight: bold; font-size: 1.2rem; cursor: pointer; color: var(--text-main);
+        }
+        .cloze-slot.filled { border-bottom-style: solid; background: var(--accent-glow); color: var(--accent); }
+        .cloze-word {
+            display: inline-block; padding: 0.5rem 1rem; margin: 0.25rem;
+            background: var(--panel-bg); border: 1px solid var(--border-color);
+            border-radius: 4px; cursor: pointer; font-family: 'Jura'; font-weight: bold; transition: 0.2s;
+        }
+        .cloze-word:hover { border-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+        .cloze-word.used { opacity: 0.3; pointer-events: none; }
+
+        /* --- SYNTAX SIMULATOR --- */
+        .syntax-block {
+            display: inline-block; padding: 1rem 1.5rem; margin: 0.5rem;
+            background: rgba(0,0,0,0.8); border: 2px solid var(--border-color);
+            border-radius: 0.5rem; cursor: pointer; font-size: 1.5rem; font-weight: bold; transition: all 0.2s;
+        }
+        .syntax-block.selected { border-color: var(--accent); background: var(--accent-glow); color: var(--text-main); }
+        
+        /* --- ROLEPLAY UI --- */
+        .tactic-card {
+            background: rgba(0,0,0,0.6); border: 2px solid #333; border-radius: 8px; padding: 1rem; transition: 0.3s; cursor: pointer;
+        }
+        .tactic-card:hover { border-color: var(--accent); background: var(--accent-glow); }
+        
+        /* --- VERDICT ENGINE --- */
+        #verdict-screen { position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center; background: black; }
+        .verdict-text { font-family: 'Cinzel'; font-size: 8vw; font-weight: 900; text-transform: uppercase; text-align: center; animation: pulse 2s infinite; }
+        
+        @keyframes toastUp {
+            0% { transform: translate(-50%, 20px) scale(0.8); opacity: 0; }
+            10% { transform: translate(-50%, 0) scale(1.1); opacity: 1; filter: drop-shadow(0 0 30px var(--accent-glow)); }
+            15% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+            90% { transform: translate(-50%, 0) scale(1); opacity: 1; }
+            100% { transform: translate(-50%, -20px) scale(0.8); opacity: 0; }
+        }
+        .toast-anim { animation: toastUp 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    </style>
+</head>
+<body class="flex flex-col h-screen w-screen overflow-hidden selection:bg-[var(--accent)] selection:text-[var(--btn-text)]">
+
+    <div id="stars-container"></div>
+    <div id="shatter-layer">
+        <div class="absolute inset-0 flex flex-col items-center justify-center text-[var(--accent)] font-tech bg-black/50 backdrop-blur-sm">
+            <span class="text-9xl mb-8 animate-spin drop-shadow-[0_0_50px_red]">🌌</span>
+            <span class="text-6xl font-black tracking-[0.5em] animate-pulse drop-shadow-[0_0_30px_red] text-white">MULTIVERSAL INCURSION DETECTED</span>
+        </div>
+    </div>
+    
+    <!-- Verdict Screen Animation -->
+    <div id="verdict-screen">
+        <span class="text-9xl mb-8 block" id="v-icon"></span>
+        <h1 class="verdict-text" id="v-text"></h1>
+        <button class="btn-outline px-8 py-3 mt-12 text-white border-white hover:bg-white hover:text-black font-black" onclick="closeVerdict()">Return to Dashboard</button>
+    </div>
+
+    <!-- Praise Popup -->
+    <div id="praise-popup" class="fixed top-[15%] left-1/2 hidden z-[10000] pointer-events-none transform -translate-x-1/2">
+        <div class="defcon-panel px-10 py-5 border-l-4 border-l-[var(--accent)] flex items-center gap-6 shadow-[0_0_40px_var(--accent-glow)] rounded-r-xl">
+            <span id="praise-icon" class="text-4xl">🛡️</span>
+            <span id="praise-text" class="text-[var(--accent)] font-black text-3xl uppercase tracking-[0.2em] font-tech text-shadow"></span>
+        </div>
+    </div>
+
+    <header class="h-16 shrink-0 bg-black/80 backdrop-blur-xl border-b border-[var(--border-color)] z-40 flex items-center justify-between px-4 md:px-8 shadow-2xl relative transition-colors duration-500">
+        <div class="flex items-center gap-3">
+            <span class="text-2xl text-[var(--accent)]" id="header-icon">🌍</span>
+            <h1 class="font-tech font-black tracking-[0.3em] text-lg text-[var(--text-main)] uppercase hidden md:block" id="header-title">Global Defense Grid</h1>
+            <span class="bg-[var(--accent-glow)] text-[var(--accent)] border border-[var(--accent)] font-black text-[10px] md:text-xs px-3 py-1 rounded tracking-[0.2em] uppercase">LEVEL: B2</span>
+        </div>
+        <div class="flex items-center gap-6">
+            <div class="flex items-center gap-3 bg-white/5 border border-white/10 rounded-lg px-4 py-1.5 shadow-inner hidden md:flex">
+                <span class="text-xs text-[var(--text-muted)] font-black mr-2 uppercase tracking-widest font-tech opacity-70">Evaluate:</span>
+                <button onclick="triggerPraise('FLAWLESS LOGIC!', '📜')" class="text-xl hover:scale-125 transition-transform">📜</button>
+                <button onclick="triggerPraise('TACTICAL SUCCESS!', '⚔️')" class="text-xl hover:scale-125 transition-transform">⚔️</button>
+            </div>
+            <button onclick="toggleFullscreen()" class="btn-outline px-4 py-1.5 text-xs uppercase tracking-widest hidden sm:block font-black">[ Fullscreen ]</button>
+        </div>
+    </header>
+
+    <main class="flex-1 overflow-y-auto w-full relative z-10 scroll-smooth double-click-area">
+        <div class="w-full h-full relative" id="slides-container">
+            
+            <!-- 01: COVER -->
+            <section class="slide active p-4 md:p-8"><div class="page-content"><div class="w-full max-w-[280px] md:max-w-[400px] defcon-panel p-2 mb-8 shadow-[0_0_60px_var(--accent-glow)] mx-auto"><img src="https://upload.wikimedia.org/wikipedia/pt/e/ee/Avengers_Doomsday_poster.jpg" alt="Poster" class="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity"></div><span class="text-[10px] md:text-xs font-black tracking-[0.3em] uppercase text-[var(--accent)] mb-4 border border-[var(--accent)] px-6 py-2 rounded bg-[var(--accent-glow)] font-tech">WOLFLIX MASTERCLASS</span><h1 class="text-6xl md:text-8xl font-black uppercase tracking-tighter mb-4 text-[var(--text-main)] font-epic">DOOMSDAY</h1><h2 class="text-xl font-bold text-[var(--text-muted)] uppercase tracking-[0.2em] font-tech">The Collapse of Reality (B2 Level)</h2></div></section>
+
+            <!-- 02: METHODOLOGY -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Directive 01</h2><h1 class="text-4xl md:text-6xl font-black font-epic uppercase mb-10">Welcome, Commander</h1><div class="defcon-panel p-10 max-w-4xl text-left mx-auto"><p class="mb-6 font-bold text-2xl border-b border-[var(--border-color)] pb-4 font-tech">Masterclass Level: B2 (Upper-Intermediate)</p><div class="bg-black/50 p-8 rounded-lg"><ul class="space-y-6 font-medium text-lg text-[var(--text-muted)]"><li><strong class="text-white">Inversion for Dramatic Effect:</strong> "Never have I seen such power."</li><li><strong class="text-white">Idioms of Power:</strong> Deter, Sacrifice, Squabbles, Unthinkable.</li><li><strong class="text-white">Roleplay & Negotiation:</strong> The final 3-Round Boss Fight.</li></ul></div></div></div></section>
+
+            <!-- 03: WARM UP 1 -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Advanced Briefing</h2><h1 class="text-4xl md:text-6xl font-black font-epic uppercase mb-10">The Price of Power</h1><div class="defcon-panel p-12 max-w-4xl text-center mx-auto hover:border-[var(--accent)] transition-all duration-500"><span class="text-8xl mb-8 block animate-pulse">👑</span><p class="text-2xl font-bold mb-10">"Doctor Doom believes that humanity cannot govern itself, and only under his absolute rule can the universe find peace. Do you agree that true peace requires the loss of freedom?"</p><div class="speaking-starter mx-auto"><p class="font-black text-[var(--accent)] font-tech text-sm mb-2 uppercase">🗣️ Defend your stance:</p><p class="italic text-xl text-gray-300">"I fundamentally disagree/agree because..."</p></div></div></div></section>
+
+            <!-- 04: WARM UP 2 -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Ethical Dilemma</h2><h1 class="text-4xl md:text-6xl font-black font-epic uppercase mb-10">The Paradox</h1><div class="defcon-panel p-12 max-w-4xl text-center mx-auto border-t-4 border-[var(--accent)]"><span class="text-8xl mb-8 block animate-[spin_10s_linear_infinite]">🌌</span><p class="text-2xl font-bold mb-10">"If you knew that destroying one timeline (killing billions) would save ten other timelines (saving trillions), would you have the resolve to make that unthinkable decision?"</p><div class="speaking-starter mx-auto"><p class="font-black text-[var(--accent)] font-tech text-sm mb-2 uppercase">🗣️ Analyze the consequences:</p><p class="italic text-xl text-gray-300">"Making that choice would mean..."</p></div></div></div></section>
+
+            <!-- 05: THE INCURSION (WOW) -->
+            <section class="slide p-4 md:p-8 text-center"><div class="page-content"><div class="max-w-4xl mx-auto"><span class="text-7xl mb-6 block animate-bounce">📡</span><h2 class="font-tech font-bold tracking-[0.2em] mb-4 uppercase text-xs text-[var(--accent)]">Dimensional Anomaly</h2><h1 class="text-5xl md:text-7xl font-tech font-black uppercase mb-8">The Incursion</h1><div class="defcon-panel p-10 max-w-3xl border-t-4 border-[var(--accent)] text-2xl font-bold italic text-gray-300 mx-auto">"Warning: Our reality is colliding with an alternate timeline. The fabric of the multiverse is tearing apart."</div><button onclick="triggerIncursionEvent()" class="defcon-btn mt-12 px-12 py-6 text-3xl">ANALYZE RIFT</button></div></div></section>
+
+            <!-- 06: EMERGENCY MODE -->
+            <section class="slide p-4 md:p-8 text-center"><div class="page-content"><div class="max-w-4xl mx-auto"><span class="text-8xl mb-6 block drop-shadow-[0_0_40px_rgba(231,76,60,1)]">🦹‍♂️</span><h2 class="font-tech font-black tracking-[0.3em] mb-3 uppercase text-xs text-red-500 animate-pulse">Timeline Compromised</h2><h1 class="text-6xl md:text-8xl font-epic font-black uppercase mb-8 drop-shadow-[0_0_15px_red]">He Is Here.</h1><div class="defcon-panel p-10 max-w-3xl border-2 border-red-600 bg-red-900/20 text-3xl mx-auto font-epic"><p class="font-bold italic">"Watch the transmission carefully. Pay attention to his vocabulary."</p></div></div></div></section>
+
+            <!-- 07: TRAILER -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Live Multiverse Feed</h2><h1 class="text-4xl md:text-6xl font-black font-epic uppercase mb-10">Doomsday Trailer</h1><div class="defcon-panel p-4 max-w-5xl mx-auto w-full"><div class="w-full aspect-video bg-black border-4 border-[var(--accent)] overflow-hidden"><iframe width="100%" height="100%" src="https://www.youtube.com/embed/irVNGjRFZGk" frameborder="0" allowfullscreen></iframe></div></div></div></section>
+
+            <!-- 08: COMP CHECK -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">System Evaluation</h2><h1 class="text-4xl md:text-6xl font-black font-epic uppercase mb-10">Comprehension</h1><div class="defcon-panel p-12 max-w-4xl mx-auto w-full text-center border-t-2 border-[var(--accent)]"><p class="text-3xl font-bold mb-12">How much did you grasp from that transmission?</p><input type="range" min="0" max="100" value="50" class="w-full h-4 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-[var(--accent)] mb-12 shadow-inner" oninput="document.getElementById('comp-value').innerText = this.value + '%'"><p id="comp-value" class="text-[var(--accent)] text-4xl font-black font-tech mb-8">50%</p><button class="defcon-btn px-10 py-4 text-xl" onclick="triggerPraise('DATA LOGGED!', '📈')">Lock In Result</button></div></div></section>
+
+            <!-- 09: AUDIO DECRYPTION -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Data Extraction</h2><h1 class="text-4xl font-black font-epic uppercase mb-6">Audio Decryption</h1><p class="text-lg text-[var(--text-muted)] mb-8">The transcript is corrupted. Click a word, then click a slot to decrypt.</p><div class="defcon-panel p-10 max-w-4xl mx-auto text-xl leading-loose font-medium text-gray-300 relative z-20 mb-8"><p class="mb-6">"Something's coming. Something we may not be able to <span class="cloze-slot" onclick="placeCloze(this)" data-answer="deter"></span>. Before this day is done, we shall be faced with an <span class="cloze-slot" onclick="placeCloze(this)" data-answer="unthinkable"></span> decision."</p><p class="mb-6 border-l-4 border-[var(--border-color)] pl-6 text-gray-400 italic bg-black/30 py-2">"I've fought with many warriors in my time. They were far stronger than all of us put together. And they died."</p><p>"Everything that they <span class="cloze-slot" onclick="placeCloze(this)" data-answer="sacrificed"></span> will be for nothing if we do not stand together. Put aside your petty <span class="cloze-slot" onclick="placeCloze(this)" data-answer="squabbles"></span>. <span class="cloze-slot" onclick="placeCloze(this)" data-answer="presume"></span> nothing except this..."</p></div><div class="bg-black/50 border border-[var(--border-color)] p-6 rounded-lg max-w-4xl flex flex-wrap justify-center gap-4"><span class="cloze-word" onclick="selectClozeWord(this)">unthinkable</span><span class="cloze-word" onclick="selectClozeWord(this)">presume</span><span class="cloze-word" onclick="selectClozeWord(this)">deter</span><span class="cloze-word" onclick="selectClozeWord(this)">squabbles</span><span class="cloze-word" onclick="selectClozeWord(this)">sacrificed</span></div><div class="mt-6 flex gap-4"><button class="btn-outline px-6 py-2" onclick="resetCloze()">Reset</button><button class="defcon-btn px-8 py-2" onclick="checkCloze()">Verify Decryption</button></div></div></section>
+
+            <!-- 10: PREMIUM LEXICON -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Vocabulary Database</h2><h1 class="text-4xl font-black font-epic uppercase mb-10">Operational Lexicon</h1><div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto"><div class="holo-card defcon-panel p-8 text-left" onclick="this.classList.toggle('open')"><div class="flex justify-between items-center"><div><h3 class="font-epic font-black text-3xl uppercase tracking-widest text-[var(--text-main)] mb-1">Deter</h3><p class="font-tech text-[var(--accent)] text-sm font-bold tracking-widest">VERB</p></div><span class="text-4xl text-[var(--accent)]">+</span></div><div class="holo-content"><p class="text-xl mb-4 font-bold text-gray-200">To discourage or prevent someone from doing something through fear.</p><div class="bg-black/80 p-4 rounded border border-[var(--border-color)]"><p class="text-[10px] font-tech text-[var(--accent)] uppercase mb-2 font-black">🗣️ Discussion Prompt:</p><p class="text-white italic">How do you deter a villain who has infinite power?</p></div></div></div><div class="holo-card defcon-panel p-8 text-left" onclick="this.classList.toggle('open')"><div class="flex justify-between items-center"><div><h3 class="font-epic font-black text-3xl uppercase tracking-widest text-[var(--text-main)] mb-1">Unthinkable</h3><p class="font-tech text-[var(--accent)] text-sm font-bold tracking-widest">ADJECTIVE</p></div><span class="text-4xl text-[var(--accent)]">+</span></div><div class="holo-content"><p class="text-xl mb-4 font-bold text-gray-200">Too unlikely or terrible to be considered a possibility.</p><div class="bg-black/80 p-4 rounded border border-[var(--border-color)]"><p class="text-[10px] font-tech text-[var(--accent)] uppercase mb-2 font-black">🗣️ Discussion Prompt:</p><p class="text-white italic">What is an unthinkable action a hero might have to take to save the world?</p></div></div></div></div></div></section>
+
+            <!-- 11: EPIC EXPRESSIONS 1 (WITH FOLLOW UP) -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Communication Protocol</h2><h1 class="text-4xl font-black font-epic uppercase mb-8">Epic Expressions I</h1><div class="defcon-panel p-12 max-w-4xl mx-auto border-t-2 border-[var(--accent)] bg-black/60"><p class="text-4xl font-black text-white font-epic uppercase mb-2">"Mark my words."</p><p class="text-xl text-[var(--accent)] font-tech tracking-widest mb-10">/ mɑrk maɪ wɜrdz /</p><p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">Used to emphasize that what you are predicting will absolutely happen, regardless of what anyone thinks.</p><div class="bg-black/80 p-6 rounded-lg border border-[var(--border-color)] mt-8 text-left mx-auto max-w-xl shadow-inner"><p class="text-xs font-tech text-[var(--accent)] uppercase tracking-widest mb-2 font-black">🗣️ Follow Up Question:</p><p class="text-white font-medium text-lg italic">Make a bold prediction about the future of technology and start it with "Mark my words..."</p></div></div></div></section>
+
+            <!-- 12: EPIC EXPRESSIONS 2 (WITH FOLLOW UP) -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Communication Protocol</h2><h1 class="text-4xl font-black font-epic uppercase mb-8">Epic Expressions II</h1><div class="defcon-panel p-12 max-w-4xl mx-auto border-t-2 border-[var(--accent)] bg-black/60"><p class="text-4xl font-black text-white font-epic uppercase mb-2">"Put aside"</p><p class="text-xl text-[var(--accent)] font-tech tracking-widest mb-10">Phrasal Verb</p><p class="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">To consciously ignore a disagreement or a feeling so that you can focus on a bigger priority.</p><div class="bg-black/80 p-6 rounded-lg border border-[var(--border-color)] mt-8 text-left mx-auto max-w-xl shadow-inner"><p class="text-xs font-tech text-[var(--accent)] uppercase tracking-widest mb-2 font-black">🗣️ Follow Up Question:</p><p class="text-white font-medium text-lg italic">When was the last time you had to put aside a personal feeling to get a job done?</p></div></div></div></section>
+
+            <!-- 13: GRAMMAR INTRO -->
+            <section class="slide p-4 md:p-8 text-center"><div class="page-content"><span class="text-8xl mb-6 block">📜</span><h2 class="font-tech font-black tracking-[0.2em] mb-4 uppercase text-xs text-[var(--accent)]">Grammar Focus</h2><h1 class="text-5xl font-epic font-black uppercase mb-8">Inversion For Effect</h1><div class="defcon-panel p-10 max-w-3xl border-t-4 border-[var(--accent)] text-xl font-bold text-gray-300 mx-auto">"Villains don't speak normally. They use advanced syntax to sound authoritative, theatrical, and intimidating."</div></div></section>
+
+            <!-- 14: NORMAL SYNTAX -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-gray-500">Standard English</h2><h1 class="text-4xl md:text-6xl font-black font-epic uppercase mb-10 text-gray-400">Normal Syntax</h1><div class="defcon-panel p-12 max-w-4xl text-left mx-auto border-l-4 border-gray-500 bg-gray-900/30"><p class="text-2xl text-gray-400 mb-8 font-medium">Standard subject-verb order. Grammatically correct, but boring.</p><div class="bg-black/60 p-6 rounded-lg border border-gray-700"><p class="text-3xl font-bold text-white mb-2">"I <span class="text-gray-400">have never</span> seen such power."</p></div></div></div></section>
+
+            <!-- 15: DRAMATIC INVERSION -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Advanced English (B2/C1)</h2><h1 class="text-4xl md:text-6xl font-black font-epic uppercase mb-10 text-[var(--accent)]">Dramatic Inversion</h1><div class="defcon-panel p-12 max-w-4xl text-left mx-auto border-l-4 border-[var(--accent)] bg-[var(--accent-glow)]/10"><p class="text-2xl text-white mb-8 font-medium">Bring the negative adverb to the front, and invert the subject and auxiliary verb.</p><div class="bg-black/60 p-6 rounded-lg border border-[var(--accent)]/50"><p class="text-3xl font-bold text-white mb-2">"<span class="text-[var(--accent)]">Never have I</span> seen such power."</p><p class="text-sm mt-4 text-[var(--accent)] uppercase tracking-widest font-tech font-black">Intimidation Level: Epic.</p></div></div></div></section>
+
+            <!-- 16: BLUEPRINTS -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">System Patterns</h2><h1 class="text-4xl font-black font-epic uppercase mb-10">Villain Blueprints</h1><div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto"><div class="defcon-panel p-8 text-left border-l-2 border-[var(--accent)]"><p class="text-[var(--accent)] font-tech font-black uppercase tracking-widest text-sm mb-2">Not Only... But Also</p><p class="text-xl text-white font-bold italic">"Not only <span class="text-[var(--accent)]">will he</span> destroy the world, but he will also erase our memory."</p></div><div class="defcon-panel p-8 text-left border-l-2 border-[var(--accent)]"><p class="text-[var(--accent)] font-tech font-black uppercase tracking-widest text-sm mb-2">Little did they know</p><p class="text-xl text-white font-bold italic">"Little <span class="text-[var(--accent)]">did they</span> know, the universe was already doomed."</p></div></div></div></section>
+
+            <!-- 17: SYNTAX SIMULATOR -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Interactive Challenge</h2><h1 class="text-4xl font-black font-epic uppercase mb-6">Villain Syntax Simulator</h1><div class="defcon-panel p-10 max-w-4xl mx-auto text-center border-t-2 border-[var(--accent)]"><p class="text-xl text-gray-400 mb-4 font-bold">Standard: "They rarely face such an unthinkable threat."</p><p class="text-2xl text-white font-bold mb-10 uppercase tracking-widest font-tech text-[var(--accent)]">Convert to Dramatic Inversion:</p><div class="bg-black/50 border-2 border-[var(--border-color)] rounded-xl p-6 mb-8 min-h-[100px] flex flex-wrap justify-center items-center gap-2 shadow-inner" id="syntax-drop"></div><div class="flex flex-wrap justify-center gap-3 mb-8 p-4" id="syntax-words"><span class="syntax-block" onclick="selectSyntax(this)">they</span><span class="syntax-block" onclick="selectSyntax(this)">do</span><span class="syntax-block" onclick="selectSyntax(this)">face</span><span class="syntax-block" onclick="selectSyntax(this)">Rarely</span></div><div class="flex justify-center gap-4"><button class="btn-outline px-6 py-2 uppercase text-sm" onclick="resetSyntax()">Reset</button><button class="defcon-btn px-8 py-2 text-lg" onclick="checkSyntax()">Broadcast Speech</button></div></div></div></section>
+
+            <!-- 18: ERROR DECODER (NEW) -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-black font-tech tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">System Diagnostics</h2><h1 class="text-4xl font-black font-epic uppercase mb-6">Error Decoder</h1><div class="defcon-panel p-10 max-w-4xl mx-auto text-center border-t-4 border-amber-500 bg-amber-900/10"><span class="text-6xl mb-6 block drop-shadow-[0_0_10px_orange]">⚠️</span><p class="text-xl text-gray-300 mb-6 font-bold">The timeline's language core is corrupted. A student tried to use Inversion, but made a critical syntax error.</p><div class="bg-black p-6 rounded-lg border-2 border-red-500 mb-8"><p class="text-2xl text-red-500 font-bold line-through">"Under no circumstances you should trust Doctor Doom."</p></div><div class="speaking-starter mx-auto mb-8"><p class="font-black text-amber-500 font-tech text-sm mb-2 uppercase">🗣️ Identify & Correct the Error:</p><p class="italic text-xl text-gray-300 text-center">Where is the missing auxiliary verb?</p></div><button class="defcon-btn bg-amber-500 hover:bg-amber-400 text-black px-8 py-3" onclick="triggerPraise('ERROR CORRECTED!', '✅')">Verify Fix</button></div></div></section>
+
+            <!-- 19: TACTICAL PROTOCOL (BOSS FIGHT INTRO) -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-tech font-black tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)] text-center">The Climax</h2><h1 class="text-5xl font-epic font-black uppercase mb-10 text-center">Tactical Protocol</h1><div class="defcon-panel p-12 max-w-4xl mx-auto border-t-4 border-[var(--accent)]"><div class="flex flex-col md:flex-row items-center gap-10"><div class="text-8xl">🛡️</div><div class="text-left"><h3 class="text-3xl font-black mb-4 uppercase text-[var(--accent)] font-tech tracking-widest">The Negotiation (3 Rounds)</h3><p class="text-xl text-gray-300 mb-6 font-medium">Doctor Doom has trapped you. He will make 3 statements. In each round, you must formulate a response using one of two paths:</p><ul class="space-y-4 text-lg font-bold text-white list-none"><li class="p-3 bg-red-900/30 border border-red-900 rounded">🔴 <strong class="text-red-400">Path A (Aggressive):</strong> Requires using Inversion Grammar.</li><li class="p-3 bg-blue-900/30 border border-blue-900 rounded">🔵 <strong class="text-blue-400">Path B (Diplomatic):</strong> Requires using an Idiom of Power.</li></ul></div></div></div></div></section>
+
+            <!-- 20: ROUND 1 -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-tech font-black tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Negotiation Protocol</h2><h1 class="text-5xl font-epic font-black uppercase mb-8 text-center text-red-500">Round 1: The Opening Gambit</h1><div class="defcon-panel p-10 max-w-5xl mx-auto w-full text-center border-2 border-red-900 shadow-[0_0_30px_rgba(255,0,0,0.2)] bg-black/80"><p class="text-sm font-tech text-gray-500 uppercase tracking-widest mb-4">Doctor Doom States:</p><div class="text-3xl font-epic text-white font-black italic mb-10 py-6 border-y border-red-900">"Your world is weak. It is plagued by endless squabbles. Surrender your freedom, and I will give you peace."</div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="tactic-card border-red-500 hover:border-red-400 hover:bg-red-900/20 text-left"><p class="text-red-500 font-black font-tech uppercase text-xs mb-2">🔴 Path A: Intimidate</p><p class="text-lg font-bold text-white">Refuse his offer using the <strong class="text-red-400">Inversion</strong>: "Under no circumstances..."</p></div><div class="tactic-card border-blue-500 hover:border-blue-400 hover:bg-blue-900/20 text-left"><p class="text-blue-500 font-black font-tech uppercase text-xs mb-2">🔵 Path B: Reason</p><p class="text-lg font-bold text-white">Ask him to compromise using the <strong class="text-blue-400">Idiom</strong>: "Put aside"</p></div></div></div></div></section>
+
+            <!-- 21: ROUND 2 -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-tech font-black tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Negotiation Protocol</h2><h1 class="text-5xl font-epic font-black uppercase mb-8 text-center text-amber-500">Round 2: The Dilemma</h1><div class="defcon-panel p-10 max-w-5xl mx-auto w-full text-center border-2 border-amber-900 shadow-[0_0_30px_rgba(255,165,0,0.2)] bg-black/80"><p class="text-sm font-tech text-gray-500 uppercase tracking-widest mb-4">Doctor Doom Counters:</p><div class="text-3xl font-epic text-white font-black italic mb-10 py-6 border-y border-amber-900">"Compromise is the language of the weak. I alone have seen the collapse of reality. My way is the only way."</div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="tactic-card border-red-500 hover:border-red-400 hover:bg-red-900/20 text-left"><p class="text-red-500 font-black font-tech uppercase text-xs mb-2">🔴 Path A: Challenge</p><p class="text-lg font-bold text-white">Challenge his arrogance using the <strong class="text-red-400">Inversion</strong>: "Never have we..."</p></div><div class="tactic-card border-blue-500 hover:border-blue-400 hover:bg-blue-900/20 text-left"><p class="text-blue-500 font-black font-tech uppercase text-xs mb-2">🔵 Path B: De-escalate</p><p class="text-lg font-bold text-white">Acknowledge the threat using the <strong class="text-blue-400">Vocab</strong>: "Unthinkable"</p></div></div></div></div></section>
+
+            <!-- 22: ROUND 3 -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-tech font-black tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Negotiation Protocol</h2><h1 class="text-5xl font-epic font-black uppercase mb-8 text-center text-[var(--accent)]">Round 3: The Ultimatum</h1><div class="defcon-panel p-10 max-w-5xl mx-auto w-full text-center border-2 border-[var(--border-color)] shadow-[0_0_30px_var(--accent-glow)] bg-black/80"><p class="text-sm font-tech text-gray-500 uppercase tracking-widest mb-4">Doctor Doom Declares:</p><div class="text-3xl font-epic text-white font-black italic mb-10 py-6 border-y border-[var(--border-color)]">"You test my patience. I will give you one last chance to bow before me, or I will destroy your universe."</div><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div class="tactic-card border-red-500 hover:border-red-400 hover:bg-red-900/20 text-left"><p class="text-red-500 font-black font-tech uppercase text-xs mb-2">🔴 Path A: Defiance</p><p class="text-lg font-bold text-white">Make a final stand using the <strong class="text-red-400">Inversion</strong>: "Not only will we fight, but..."</p></div><div class="tactic-card border-blue-500 hover:border-blue-400 hover:bg-blue-900/20 text-left"><p class="text-blue-500 font-black font-tech uppercase text-xs mb-2">🔵 Path B: Warning</p><p class="text-lg font-bold text-white">Warn him of the consequences using the <strong class="text-blue-400">Idiom</strong>: "Mark my words"</p></div></div></div></div></section>
+
+            <!-- 23: TEACHER DASHBOARD (VERDICT ENGINE) -->
+            <section class="slide p-4 md:p-8"><div class="page-content"><h2 class="font-tech font-black tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)] text-center">System Override</h2><h1 class="text-5xl font-epic font-black uppercase mb-10 text-center">Teacher Dashboard</h1><div class="defcon-panel p-12 max-w-4xl mx-auto w-full text-center border-2 border-[var(--border-color)] bg-black/90"><p class="text-xl text-gray-400 mb-10 font-bold uppercase tracking-widest font-tech">Evaluate the Student's Overall Performance to generate the final timeline outcome.</p><div class="grid grid-cols-1 md:grid-cols-3 gap-6"><button class="bg-red-900/50 hover:bg-red-700 border border-red-500 text-white p-8 rounded-xl font-black font-tech text-xl uppercase transition-colors" onclick="showVerdict('UNIVERSE ERASED', '💥', 'text-red-500')">Poor Performance<br><span class="text-sm font-normal opacity-70 mt-2 block">(Erase Universe)</span></button><button class="bg-blue-900/50 hover:bg-blue-700 border border-blue-500 text-white p-8 rounded-xl font-black font-tech text-xl uppercase transition-colors" onclick="showVerdict('TRUCE REACHED', '🤝', 'text-blue-500')">Adequate Defense<br><span class="text-sm font-normal opacity-70 mt-2 block">(Truce Reached)</span></button><button class="bg-green-900/50 hover:bg-green-700 border border-green-500 text-white p-8 rounded-xl font-black font-tech text-xl uppercase transition-colors" onclick="showVerdict('DOOM DEFEATED', '🛡️', 'text-green-500')">Flawless Logic<br><span class="text-sm font-normal opacity-70 mt-2 block">(Doom Retreats)</span></button></div></div></div></section>
+
+            <!-- 24: RATING -->
+            <section class="slide p-4 md:p-8"><div class="page-content items-center text-center"><h2 class="font-tech font-black tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Mission Complete</h2><h1 class="text-5xl font-epic font-black uppercase mb-10 text-white">Debriefing</h1><div class="defcon-panel p-12 max-w-4xl mx-auto w-full text-center border-t-4 border-[var(--border-color)] bg-black/60"><p class="mb-10 text-2xl font-bold text-white uppercase tracking-[0.2em] font-tech">Rate the complexity of this mission:</p><div class="flex justify-center gap-4 md:gap-8 mb-10"><button onclick="rate(1)" class="ufo-rating text-6xl grayscale opacity-30 hover:scale-110 transition-transform">🛡️</button><button onclick="rate(2)" class="ufo-rating text-6xl grayscale opacity-30 hover:scale-110 transition-transform">🛡️</button><button onclick="rate(3)" class="ufo-rating text-6xl grayscale opacity-30 hover:scale-110 transition-transform">🛡️</button><button onclick="rate(4)" class="ufo-rating text-6xl grayscale opacity-30 hover:scale-110 transition-transform">🛡️</button><button onclick="rate(5)" class="ufo-rating text-6xl grayscale opacity-30 hover:scale-110 transition-transform">🛡️</button></div><div id="rat-hub" class="hidden p-4 bg-black rounded-lg font-black text-lg text-center uppercase tracking-[0.3em] text-[var(--accent)] w-max mx-auto font-tech border border-gray-800">> RATED <span id="star-c" class="text-white mx-2 text-3xl"></span> SHIELDS.</div></div></div></section>
+
+            <!-- 25: END SCREEN & HOMEWORK -->
+            <section class="slide p-4 md:p-8"><div class="page-content items-center text-center"><h2 class="font-tech font-black tracking-[0.2em] mb-2 uppercase text-xs text-[var(--accent)]">Post-Class Assignment</h2><h1 class="text-4xl md:text-6xl font-epic font-black uppercase mb-10 text-white">Advanced Training Hub</h1><div class="defcon-panel p-10 max-w-3xl mx-auto w-full text-center border-4 border-[var(--accent)] shadow-[0_0_50px_var(--accent-glow)] relative overflow-hidden bg-black/80"><div class="absolute -top-6 -right-6 bg-[var(--accent)] text-black font-black uppercase tracking-widest px-10 py-3 text-sm font-tech transform rotate-12">HOMEWORK</div><p class="text-xl font-medium mb-10 text-gray-300 max-w-xl mx-auto mt-8">"Agent, access the mobile simulation to practice your Dramatic Inversions and secure the timeline."</p><a href="hw_doomsday_b2.html" class="inline-block defcon-btn px-12 py-5 text-2xl w-full md:w-auto hover:text-black">ACCESS MOBILE APP</a></div><button onclick="window.location.reload();" class="mt-12 text-sm font-bold text-gray-500 tracking-[0.3em] uppercase hover:text-white transition-colors">[ Reboot System ]</button></div></section>
+
+        </div>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 w-full h-16 md:h-20 bg-black/95 backdrop-blur-xl border-t border-[var(--border-color)] z-40 flex items-center justify-between px-4 md:px-8 transition-colors duration-1000">
+        <div class="hidden md:flex flex-1 items-center gap-3"><span class="font-black text-2xl tracking-[0.3em] uppercase text-[var(--accent)] font-tech">WOLFLIX</span><span class="text-xs uppercase tracking-[0.2em] border-l border-[var(--border-color)] pl-3 opacity-60 font-bold font-base">B2 Masterclass</span></div>
+        <div class="flex items-center justify-center flex-1 gap-6 md:gap-8"><button onclick="prevSlide()" class="w-12 h-12 flex items-center justify-center border-2 border-[var(--border-color)] rounded-full hover:border-[var(--accent)] bg-black text-white hover:bg-[var(--accent-glow)]"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M15 19l-7-7 7-7"/></svg></button><div class="w-40 md:w-64 bg-black h-3 rounded-full border border-gray-800 relative"><div id="lcd-prog" class="absolute top-0 left-0 h-full bg-[var(--accent)] w-0 transition-all duration-500 shadow-[0_0_15px_var(--accent)]"></div></div><button onclick="nextSlide()" class="w-12 h-12 flex items-center justify-center border-2 border-[var(--border-color)] rounded-full hover:border-[var(--accent)] bg-black text-white hover:bg-[var(--accent-glow)]"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 5l7 7-7 7"/></svg></button></div>
+        <div class="flex-1 text-right font-black tracking-[0.2em] uppercase text-sm md:text-xl font-tech text-[var(--text-muted)]">Pg <span id="page-num" class="text-[var(--accent)] ml-2 text-2xl">01</span> <span class="opacity-40 text-sm ml-1">/ 25</span></div>
+    </footer>
+
+    <script>
+        function createStars() { const c = document.getElementById('stars-container'); for(let i=0; i<100; i++) { const s = document.createElement('div'); s.className = 'star'; s.style.left = Math.random()*100+'vw'; s.style.top = Math.random()*100+'vh'; const size = Math.random()*4+1; s.style.width = size+'px'; s.style.height = size+'px'; s.style.animationDuration = Math.random()*3+1.5+'s'; c.appendChild(s); } } createStars();
+
+        let currentSlide = 0; const slides = document.querySelectorAll('.slide'); const totalSlides = slides.length; // 25
+        function updateUI() {
+            document.getElementById('page-num').innerText = (currentSlide + 1).toString().padStart(2, '0');
+            const prog = document.getElementById('lcd-prog'); if(totalSlides > 1) prog.style.width = `${(currentSlide / (totalSlides - 1)) * 100}%`;
+            if (currentSlide >= 5 && currentSlide <= 8) { document.body.classList.add('theme-emergency'); document.getElementById('header-title').innerText = "SYSTEM COMPROMISED"; document.getElementById('header-icon').innerText = "⚠️"; } else { document.body.classList.remove('theme-emergency'); document.getElementById('header-title').innerText = "Global Defense Grid"; document.getElementById('header-icon').innerText = "🌍"; }
+            const iframes = document.querySelectorAll('iframe'); iframes.forEach(iframe => { const src = iframe.src; iframe.src = src; });
+            const mainArea = document.querySelector('main'); if(mainArea) mainArea.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function goToSlide(i) { if (i < 0 || i >= totalSlides) return; slides.forEach(s => s.classList.remove('active')); currentSlide = i; slides[currentSlide].classList.add('active'); updateUI(); }
+        window.nextSlide = () => goToSlide(currentSlide + 1); window.prevSlide = () => goToSlide(currentSlide - 1);
+        document.addEventListener('keydown', (e) => { if(e.key === 'ArrowRight') nextSlide(); if(e.key === 'ArrowLeft') prevSlide(); });
+
+        function triggerPraise(main, icon) { const popup = document.getElementById('praise-popup'); document.getElementById('praise-text').innerText = main; document.getElementById('praise-icon').innerText = icon; popup.classList.remove('hidden', 'toast-anim'); void popup.offsetWidth; popup.classList.add('toast-anim'); setTimeout(() => popup.classList.add('hidden'), 2500); }
+        function triggerIncursionEvent() { const overlay = document.getElementById('shatter-layer'); overlay.classList.add('shatter-active'); setTimeout(() => { nextSlide(); overlay.classList.remove('shatter-active'); }, 2300); }
+
+        let selectedClozeWord = null;
+        function selectClozeWord(el) { if(el.classList.contains('used')) return; document.querySelectorAll('.cloze-word').forEach(e => e.classList.remove('ring', 'ring-[var(--accent)]')); el.classList.add('ring', 'ring-[var(--accent)]'); selectedClozeWord = el; }
+        function placeCloze(slot) { if(!selectedClozeWord) return; slot.innerText = selectedClozeWord.innerText; slot.classList.add('filled'); selectedClozeWord.classList.add('used'); selectedClozeWord.classList.remove('ring', 'ring-[var(--accent)]'); selectedClozeWord = null; }
+        function resetCloze() { document.querySelectorAll('.cloze-slot').forEach(s => { s.innerText = ''; s.classList.remove('filled'); }); document.querySelectorAll('.cloze-word').forEach(w => { w.classList.remove('used', 'ring', 'ring-[var(--accent)]'); }); selectedClozeWord = null; }
+        function checkCloze() { let allCorrect = true; document.querySelectorAll('.cloze-slot').forEach(slot => { if(slot.innerText.toLowerCase() !== slot.dataset.answer.toLowerCase()) { allCorrect = false; slot.style.borderColor = 'red'; setTimeout(() => slot.style.borderColor = '', 1000); } }); if(allCorrect) triggerPraise('AUDIO DECRYPTED!', '🔓'); else triggerPraise('DECRYPTION FAILED', '❌'); }
+
+        const correctSyntax = ["Rarely", "do", "they", "face"]; let currentSyntax = [];
+        function selectSyntax(el) { if(el.classList.contains('selected')) return; el.classList.add('selected'); let word = el.innerText; currentSyntax.push(word); let span = document.createElement('span'); span.className = 'syntax-block !mx-1 !my-0 text-white border-[var(--accent)]'; span.innerText = word; document.getElementById('syntax-drop').appendChild(span); }
+        function resetSyntax() { currentSyntax = []; document.getElementById('syntax-drop').innerHTML = ''; document.querySelectorAll('#syntax-words .syntax-block').forEach(e => e.classList.remove('selected')); }
+        function checkSyntax() { if(currentSyntax.length !== 4) { alert("Use all blocks!"); return; } if(currentSyntax.every((v, i) => v === correctSyntax[i])) { triggerPraise('SPEECH UPGRADED!', '🦹‍♂️'); } else { triggerPraise('SYNTAX ERROR', '❌'); resetSyntax(); } }
+
+        function showVerdict(text, icon, colorClass) {
+            const vs = document.getElementById('verdict-screen');
+            document.getElementById('v-icon').innerText = icon;
+            const vt = document.getElementById('v-text');
+            vt.innerText = text;
+            vt.className = 'verdict-text ' + colorClass;
+            vs.style.display = 'flex';
+        }
+        function closeVerdict() { document.getElementById('verdict-screen').style.display = 'none'; nextSlide(); }
+
+        function toggleFullscreen() { if (!document.fullscreenElement) { document.documentElement.requestFullscreen().catch(e=>console.log(e)); } else { if (document.exitFullscreen) document.exitFullscreen(); } }
+        function rate(n) { const drops = document.querySelectorAll('.ufo-rating'); drops.forEach((d, i) => { d.classList.toggle('grayscale', i >= n); d.classList.toggle('opacity-30', i >= n); d.style.filter = i < n ? "drop-shadow(0 0 20px rgba(255,255,255,0.8))" : "none"; }); document.getElementById('rat-hub').classList.remove('hidden'); document.getElementById('star-c').innerText = n; }
+        updateUI();
+    </script>
+</body>
+</html>
